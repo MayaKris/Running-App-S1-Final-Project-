@@ -9,15 +9,25 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Text(" ")
-                .font(Font.custom("Party LET", size: 55))
-            Text("welcome")
-                .font(Font.custom("Party LET", size: 70))
-            Text("Runner!")
-                .font(Font.custom("Party LET", size: 100)).italic()
-            Image("TwoRunners").resizable().frame(width: 275, height: 250)
-            Spacer()
+        ZStack{
+            Color.blue.opacity(0.4).ignoresSafeArea() // changed background color to light blue
+            VStack {
+                Text(" ") // added space above title
+                    .font(Font.custom("Party LET", size: 40))
+                Text("welcome")
+                    .font(Font.custom("Party LET", size: 75))
+                Text("Runner!")
+                    .font(Font.custom("Party LET", size: 100)) // added titles with custom font and swize
+                Image("TwoRunners").resizable().frame(width: 300, height: 250) // added image of two runners (potential app icon?)
+                    .padding(10)
+                Spacer()
+                HStack{
+                    NavigationLink("time my run ⏱︎", destination: StopwatchView()) // navigation link to go to stopwatch view (time your run)
+                        .font(Font.custom("Party LET", size: 75))
+                    
+                }
+                Spacer()
+            }
         }
     }
 }
