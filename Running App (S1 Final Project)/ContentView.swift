@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack{
+        NavigationStack{ // similar NavigationView{ ("legacy API", good if only supporting older device OS versions), but more modern (https://chatgpt.com/s/t_692e6d21be7081919093886f00d55dcc)
             ZStack{
                 Color.blue.opacity(0.4).ignoresSafeArea() // changed background color to light blue
                 VStack {
