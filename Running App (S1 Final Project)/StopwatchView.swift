@@ -11,16 +11,20 @@ struct StopwatchView: View {
     // tutorial used to create stopwatch: https://youtu.be/NYL9roIH4cg?si=oGUXozqaKbIW_I2R
     @State private var time: Double = 0.0
     @State private var isRunning: Bool = false // stopwatch starts NOT running (initally, isRunning = false), so that it is not running as soon as you go to the stopwatch view
-    @State private var timer: Timer? // optional; controls stopwatch updates
+    @State private var timer: Timer? // optional, can be a real timer when running (active) or nil when no timer exists; controls stopwatch updates
+    @State private var statusMessage = "Ready to run?" // status message
+    @State private var milestonesReached: Set<Int> = [] // so messages don't repeat every 0.01 seconds by tracking which motivational messages the user has already triggered; starts empty and stores integers via <Int> ; is a data structure (similar to an array, but stores items only once and has no duplicates so good for checking if something has been done before)
     var body: some View {
         ZStack {
             Color.blue.opacity(0.2).ignoresSafeArea() // changed background color to light blue
             VStack {
                 Text("⏱︎") // added space above title
                     .font(Font.custom("Party LET", size: 115))
+                Text(statusMessage) // display status message
+                    .font(Font.custom("Didot", size: 40))
                 Text(String(format: "%.2f", time)) // creates string in time (0:00) format, with 2 decimal places (%.2f)
                     .font(Font.custom("Party LET", size: 115))
-                    .monospacedDigit() // makes sure spacing is correct between digits whenever it's moving
+                    .monospacedDigit() // makes sure spacing is correct between digits whenever it's moving, each number takes the same width (for example with 1 and 9, where 1 is typically thinner than 9)
                     .padding()
                 HStack {
                     Button(action: {
@@ -56,9 +60,11 @@ struct StopwatchView: View {
     
     private func startTimer() {
         isRunning = true
+        statusMessage = "Keep going!" // status message changed to motivational message
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) // makes it repeat in milliseconds
-        { _ in
+        { _ in // closure: block of code that runs later; _ is a parameter but doesn;t use it (ignores the input)
             time += 0.01
+            checkMilestones()
         }
         RunLoop.main.add(timer!, forMode: .common) // explicitly placing the stopwatch/timer on the main run loop
     }
@@ -66,11 +72,41 @@ struct StopwatchView: View {
     private func stopTimer() {
         isRunning = false
         timer?.invalidate() // stopwatch is stopped
+        if time > 0 {
+            statusMessage = "Great run!" // status message changed to congratulatory message
+        }
     }
     
     private func resetTimer() {
+        let wasRunning = time > 0 // to determine if stopwatch was reset AFTER a run (because stopwatch was running)
         stopTimer() // stopwacth is stopped, using call to stopTimer() function
         time = 0.0 // time (displayed) is reset to 0:00
+        milestonesReached.removeAll()
+        if wasRunning {
+            statusMessage = "Running more?" // if stopwatch was reset AFTER a run, display new message
+        }
+        else if statusMessage == "Running more?" {
+            statusMessage = "Running more?" // status message is kept same after a run (in case reset button is clicked multiple times after a run)
+        }
+        else {
+            statusMessage = "Ready to run?" // if stopwatch was not running (no run), keep initial status message (in case reset button is just clicked multiple times, without starting or stopping the stopwatch to run)
+        }
+    }
+    
+    private func checkMilestones() {
+        let seconds = Int(time) // time (double) is converted to whole seconds (integer)
+        let milestones: [Int: String] = [ // creating an array of different motivational messages, so it changes/updates as you reach more milestones (as you run for longer)
+            300: "You're doing great!",
+            600: "Keep pushing!",
+            1200: "You're a pro!",
+            1800: "You're unstoppable!",
+            2400: "Don't give up." ]
+        for (milestoneTime, message) in milestones {
+            if seconds >= milestoneTime && !milestonesReached.contains(milestoneTime) {
+                statusMessage = message
+                milestonesReached.insert(milestoneTime)
+            }
+        }
     }
 }
 
