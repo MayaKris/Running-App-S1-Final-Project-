@@ -103,8 +103,8 @@ struct StopwatchView: View {
             2400: "Don't give up." ]
         for (milestoneTime, message) in milestones {
             if seconds >= milestoneTime && !milestonesReached.contains(milestoneTime) {
-                statusMessage = message
-                milestonesReached.insert(milestoneTime)
+                statusMessage = message // checking if the array already contains a message, which would mean it has already been displayed
+                milestonesReached.insert(milestoneTime) // if not, then this new milestone motivational message is added
             }
         }
     }
