@@ -12,6 +12,10 @@ struct PaceView: View {
     @State private var seconds = ""
     @State private var distance = ""
     @State private var inMiles = true // if false, then the user chose kilometers
+    @State private var pace = ""
+    @State private var speed = ""
+    @State private var convPace = ""
+    @State private var convSpeed = ""
     var body: some View {
         ZStack{
             Color.blue.opacity(0.1).ignoresSafeArea()
@@ -24,23 +28,119 @@ struct PaceView: View {
                     TextField("Minutes", text: $minutes)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.numberPad) // changes to number keyboard (brings up only numbers): https://developer.apple.com/documentation/uikit/uikeyboardtype
+                    TextField("Seconds", text: $seconds)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
                 }
                 Text("enter your distance")
                     .font(Font.custom("Didot", size: 37))
                 TextField("Distance (ex. 3.1)", text: $distance)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.decimalPad) // changes to decimal keyboard: https://developer.apple.com/documentation/uikit/uikeyboardtype
-                HStack { // user can toggle distance units from km to m (and vice versa)
+                HStack(spacing: 12) { // user can toggle distance units from km to mi (and vice versa)
                     Text("units:")
+                        .font(.subheadline)
                     Text("km")
+                        .font(.subheadline)
+                        .fontWeight(inMiles ? .regular : .bold)
+                        .foregroundColor(inMiles ? .secondary : .primary)
                     Toggle("", isOn: $inMiles)
+                        .frame(width: 60)
                     Text("mi")
-                    Spacer()
+                        .font(.subheadline)
+                        .fontWeight(inMiles ? .bold : .regular)
+                        .foregroundColor(inMiles ? .primary : .secondary)
+                }
+                Button("Calculate Pace") {
+                    calculate()
+                }
+                .padding(20)
+                if pace != "" {
+                    Text("your pace: \(pace)")
+                        .font(Font.custom("Didot", size: 20))
+    
+                    Text("your speed: \(speed)")
+                        .font(Font.custom("Didot", size: 20))
+                        .padding(20)
+                    Button("Convert") {
+                        convertUnits()
+                    }
+                    .padding(20)
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    
+                    if convPace != "" {
+                        Text("pace: \(convPace)")
+                            .padding()
+                        Text("speed: \(convSpeed)")
+                            .padding()
+                    }
                 }
             }
         }
     }
+    
+    private func calculate() {
+        let mins = Double(minutes) ?? 0 // converts text to number, else use 0
+        let secs = Double(seconds) ?? 0
+        let dist = Double(distance) ?? 0
+        let totalSeconds = mins * 60 + secs
+        if dist == 0 || totalSeconds == 0 { // in case user inputs zero or no value
+            pace = ""
+            speed = ""
+            convPace = ""
+            convSpeed = ""
+            return
+        }
+        let secondsPerUnit = totalSeconds / dist
+        let paceMin = Int(secondsPerUnit) / 60
+        let paceSec = Int(secondsPerUnit) % 60
+        let paceString = String(format: "%d:%02d", paceMin, paceSec) // %02d: always show two digits
+        if inMiles {
+            pace = "\(paceString)  min/mi"
+        }
+        else {
+            pace = "\(paceString)  min/km"
+        }
+        let hours = totalSeconds / 3600.0
+        let speedValue = dist / hours
+        if inMiles {
+            speed = "\(String(format: "%.2f", speedValue)) mph"
+        }
+        else {
+            speed = "\(String(format: "%.2f", speed)) km/h"
+        }
+    }
+    
+    private func convertUnits() {
+        let mins = Double(minutes) ?? 0
+        let secs = Double(seconds) ?? 0
+        let dist = Double(distance) ?? 0
+        let totalSeconds = mins * 60 + secs
+        let hours = totalSeconds / 3600
+        if inMiles {
+            let km = dist * 1.60934
+            let secPerKm = totalSeconds / km
+            let min = Int(secPerKm) / 60 
+            let sec = Int(secPerKm) % 60
+            convPace = "\(String(format: "%d:%02d", min, sec))  min/km"
+            let kmh = km / hours
+            convSpeed = "\(String(format: "%.2f", kmh)) km/h"
+        }
+        else {
+            let miles = dist * 0.621371
+            let secPerMile = totalSeconds / miles
+            let min = Int(secPerMile) / 60
+            let sec = Int(secPerMile) % 60
+            convPace = "\(String(format: "%d:%02d", min, sec))  min/mi"
+            let mph = miles / hours
+            convSpeed = "\(String(format: "%.2f", mph)) mph"
+        }
+        
+    }
 }
+
 
 #Preview {
     PaceView()
