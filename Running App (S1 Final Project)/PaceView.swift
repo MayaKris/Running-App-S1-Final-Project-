@@ -30,12 +30,14 @@ struct PaceView: View {
                 HStack { // textfields for users to enter data
                     TextField("Minutes", text: $minutes)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: 150)
                         .keyboardType(.numberPad) // changes to number keyboard (brings up only numbers): https://developer.apple.com/documentation/uikit/uikeyboardtype
                         .onTapGesture {
                             calculated = false // set to false when user starts typing new time (minutes)
                         }
                     TextField("Seconds", text: $seconds)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: 150)
                         .keyboardType(.numberPad)
                         .onTapGesture {
                             calculated = false // set to false when user starts typing new time (seconds)
@@ -45,6 +47,7 @@ struct PaceView: View {
                     .font(Font.custom("Didot", size: 37))
                 TextField("Distance (ex. 3.1)", text: $distance)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .frame(width: 312)
                     .keyboardType(.decimalPad) // changes to decimal keyboard: https://developer.apple.com/documentation/uikit/uikeyboardtype
                     .onTapGesture {
                         calculated = false // set to false when user starts typing new distance
@@ -68,25 +71,27 @@ struct PaceView: View {
                     calculate()
                     calculated = true // show new data
                 }
-                .padding(20)
+                .padding(10)
                 if pace != "" {
                     Text("your pace: \(pace)")
                         .font(Font.custom("Didot", size: 20))
-    
+                        .padding(.bottom, 2)
                     Text("your speed: \(speed)")
                         .font(Font.custom("Didot", size: 20))
-                        .padding(20)
+                        .padding(.top, 2)
                     Button("Convert") {
                         convertUnits()
                     }
-                    .padding(20)
+                    .padding(10)
                     
                     
                     if convPace != "" {
                         Text("pace: \(convPace)")
-                            .padding()
+                            .font(Font.custom("Didot", size: 20))
+                            .padding(.bottom, 2)
                         Text("speed: \(convSpeed)")
-                            .padding()
+                            .font(Font.custom("Didot", size: 20))
+                            .padding(.top, 2)
                     }
                 }
             }
