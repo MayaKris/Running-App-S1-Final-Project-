@@ -22,11 +22,10 @@ struct ContentView: View {
                     Image("TwoRunners").resizable().frame(width: 300, height: 250) // added image of two runners (potential app icon?)
                         .padding(10)
                     Spacer()
-                    HStack{
                         NavigationLink("time my run ⏱︎", destination: StopwatchView()) // navigation link to go to stopwatch view (time your run)
-                            .font(Font.custom("Didot", size: 45))
-                        
-                    }
+                            .font(Font.custom("Didot", size: 40))
+                    NavigationLink("what's my pace? 👟", destination: PaceView())
+                        .font(Font.custom("Didot", size: 40))
                     Spacer()
                 }
             }
