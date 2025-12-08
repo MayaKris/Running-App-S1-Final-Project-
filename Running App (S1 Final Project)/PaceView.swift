@@ -16,6 +16,9 @@ struct PaceView: View {
     @State private var speed = ""
     @State private var convPace = ""
     @State private var convSpeed = ""
+    @State private var calculated = false // to check if user is still typing/recalculating, or if calculation is true
+    @State private var lastPace = "" // to store last calculated pace
+    @State private var lastSpeed = "" // to store last calculated speed
     var body: some View {
         ZStack{
             Color.blue.opacity(0.1).ignoresSafeArea()
@@ -28,15 +31,24 @@ struct PaceView: View {
                     TextField("Minutes", text: $minutes)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.numberPad) // changes to number keyboard (brings up only numbers): https://developer.apple.com/documentation/uikit/uikeyboardtype
+                        .onTapGesture {
+                            calculated = false // set to false when user starts typing new time (minutes)
+                        }
                     TextField("Seconds", text: $seconds)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.numberPad)
+                        .onTapGesture {
+                            calculated = false // set to false when user starts typing new time (seconds)
+                        }
                 }
                 Text("enter your distance")
                     .font(Font.custom("Didot", size: 37))
                 TextField("Distance (ex. 3.1)", text: $distance)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.decimalPad) // changes to decimal keyboard: https://developer.apple.com/documentation/uikit/uikeyboardtype
+                    .onTapGesture {
+                        calculated = false // set to false when user starts typing new distance
+                    }
                 HStack(spacing: 12) { // user can toggle distance units from km to mi (and vice versa)
                     Text("units:")
                         .font(.subheadline)
@@ -52,7 +64,9 @@ struct PaceView: View {
                         .foregroundColor(inMiles ? .primary : .secondary)
                 }
                 Button("Calculate Pace") {
+                    calculated = false // reset old data
                     calculate()
+                    calculated = true // show new data
                 }
                 .padding(20)
                 if pace != "" {
@@ -66,9 +80,7 @@ struct PaceView: View {
                         convertUnits()
                     }
                     .padding(20)
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                    
                     
                     if convPace != "" {
                         Text("pace: \(convPace)")
@@ -97,6 +109,13 @@ struct PaceView: View {
         let paceMin = Int(secondsPerUnit) / 60
         let paceSec = Int(secondsPerUnit) % 60
         let paceString = String(format: "%d:%02d", paceMin, paceSec) // %02d: always show two digits
+        let newPace = paceString
+        let newSpeedCalc = dist / (totalSeconds / 3600.0)
+        let newSpeed = String(format: "%.2f", newSpeedCalc)
+        if newPace != lastPace || newSpeed != lastSpeed {
+            convPace = ""
+            convSpeed = ""
+        } // so that if a new speed/pace is calculated, the old converted results (from last values) do not still display
         if inMiles {
             pace = "\(paceString)  min/mi"
         }
@@ -111,6 +130,8 @@ struct PaceView: View {
         else {
             speed = "\(String(format: "%.2f", speed)) km/h"
         }
+        lastPace = newPace // save current pace as new "last" pace
+        lastPace = newSpeed // save current speed as new "last" speed
     }
     
     private func convertUnits() {
