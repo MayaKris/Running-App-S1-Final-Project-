@@ -22,7 +22,7 @@ struct StopwatchView: View {
                     .font(Font.custom("Party LET", size: 115))
                 Text(statusMessage) // display status message
                     .font(Font.custom("Didot", size: 40))
-                Text(String(format: "%.2f", time)) // creates string in time (0:00) format, with 2 decimal places (%.2f)
+                Text(formatTime(time)) // creates string in time (0:00) format, with 2 decimal places (%.2f)
                     .font(Font.custom("Party LET", size: 115))
                     .monospacedDigit() // makes sure spacing is correct between digits whenever it's moving, each number takes the same width (for example with 1 and 9, where 1 is typically thinner than 9)
                     .padding()
@@ -58,15 +58,23 @@ struct StopwatchView: View {
         }
     }
     
+    private func formatTime(_ time: Double) -> String { // change stopwatch to counting in mm:ss format (https://chatgpt.com/s/t_69378cc1aad48191906a68ac810a8426)
+        let totalSeconds = Int(time)
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
     private func startTimer() {
         isRunning = true
-        statusMessage = "Off to a great start!" // status message changed to motivational message
+        if time == 0 { // THS INITIAL MESSAGE IS ONLY FOR WHEN USERS FIRST BEGIN THEIR RUN
+            statusMessage = "Off to a great start!" // status message changed to motivational message
+        }
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) // makes it repeat in milliseconds
         { _ in // closure: block of code that runs later; _ is a parameter but doesn;t use it (ignores the input)
             time += 0.01
             checkMilestones()
         }
-        RunLoop.main.add(timer!, forMode: .common) // explicitly placing the stopwatch/timer on the main run loop
     }
     
     private func stopTimer() {
