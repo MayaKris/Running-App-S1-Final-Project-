@@ -23,7 +23,7 @@ struct StopwatchView: View {
                 Text(statusMessage) // display status message
                     .font(Font.custom("Didot", size: 40))
                 Text(formatTime(time)) // creates string in time (0:00) format, with 2 decimal places (%.2f)
-                    .font(Font.custom("Party LET", size: 115))
+                    .font(Font.custom("Party LET", size: 100))
                     .monospacedDigit() // makes sure spacing is correct between digits whenever it's moving, each number takes the same width (for example with 1 and 9, where 1 is typically thinner than 9)
                     .padding()
                 HStack {
@@ -59,10 +59,11 @@ struct StopwatchView: View {
     }
     
     private func formatTime(_ time: Double) -> String { // change stopwatch to counting in mm:ss format (https://chatgpt.com/s/t_69378cc1aad48191906a68ac810a8426)
-        let totalSeconds = Int(time)
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
-        return String(format: "%02d:%02d", minutes, seconds)
+        let totalMili = Int(time * 100)
+        let minutes = totalMili / 6000
+        let seconds = (totalMili / 100) % 60
+        let mili = totalMili % 100
+        return String(format: "%02d:%02d:%02d", minutes, seconds, mili)
     }
     
     private func startTimer() {
