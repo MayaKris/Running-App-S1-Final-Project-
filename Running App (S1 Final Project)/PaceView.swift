@@ -23,6 +23,10 @@ struct PaceView: View {
         ZStack{
             Color.blue.opacity(0.1).ignoresSafeArea()
             VStack {
+                Text("👟") // added shoe icon above title
+                    .font(Font.custom("Party LET", size: 82))
+                Text(" ") // added blank space between shoe icon and title
+                    .font(Font.custom("Party LET", size: 22))
                 Text("Pace Calculator") // title
                     .font(Font.custom("Party LET", size: 80))
                 Text("enter your time:")
