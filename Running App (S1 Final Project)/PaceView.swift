@@ -24,8 +24,8 @@ struct PaceView: View {
             Color.blue.opacity(0.1).ignoresSafeArea()
             VStack {
                 Text("Pace Calculator") // title
-                    .font(Font.custom("Party LET", size: 75))
-                Text("enter your time")
+                    .font(Font.custom("Party LET", size: 80))
+                Text("enter your time:")
                     .font(Font.custom("Didot", size: 37))
                 HStack { // textfields for users to enter data
                     TextField("Minutes", text: $minutes)
@@ -43,7 +43,7 @@ struct PaceView: View {
                             calculated = false // set to false when user starts typing new time (seconds)
                         }
                 }
-                Text("enter your distance")
+                Text("enter your distance:")
                     .font(Font.custom("Didot", size: 37))
                 TextField("Distance (ex. 3.1)", text: $distance)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -66,6 +66,7 @@ struct PaceView: View {
                         .fontWeight(inMiles ? .bold : .regular)
                         .foregroundColor(inMiles ? .primary : .secondary)
                 }
+                .padding()
                 Button("Calculate Pace") {
                     calculated = false // reset old data
                     calculate()
