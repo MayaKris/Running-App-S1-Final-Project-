@@ -138,10 +138,10 @@ struct PaceView: View {
             speed = "\(String(format: "%.2f", speedValue)) mph"
         }
         else {
-            speed = "\(String(format: "%.2f", speed)) km/h"
+            speed = "\(String(format: "%.2f", speedValue)) km/h"
         }
         lastPace = newPace // save current pace as new "last" pace
-        lastPace = newSpeed // save current speed as new "last" speed
+        lastSpeed = newSpeed // save current speed as new "last" speed
     }
     
     private func convertUnits() {
