@@ -18,7 +18,7 @@ struct StopwatchView: View {
         ZStack {
             Color.blue.opacity(0.2).ignoresSafeArea() // changed background color to light blue
             VStack {
-                Text("⏱︎") // added clock icon above title
+                Text("⏱️") // added clock icon above title
                     .font(Font.custom("Party LET", size: 115))
                 Text(statusMessage) // display status message
                     .font(Font.custom("Didot", size: 40))

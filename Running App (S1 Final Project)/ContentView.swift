@@ -21,7 +21,7 @@ struct ContentView: View {
                         .font(Font.custom("Party LET", size: 102)) // added titles with custom font and swize
                     Image("TwoRunners").resizable().frame(width: 300, height: 250) // added image of two runners (potential app icon?)
                     Spacer()
-                    NavigationLink("time my run ⏱︎", destination: StopwatchView()) // navigation link to go to stopwatch view (time your run)
+                    NavigationLink("time my run ⏱️", destination: StopwatchView()) // navigation link to go to stopwatch view (time your run)
                         .font(Font.custom("Didot", size: 40))
                     NavigationLink("what's my pace? 👟", destination: PaceView())
                         .font(Font.custom("Didot", size: 40))
