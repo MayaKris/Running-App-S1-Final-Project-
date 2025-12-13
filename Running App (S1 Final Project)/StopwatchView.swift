@@ -25,7 +25,7 @@ struct StopwatchView: View {
                     Text(statusMessage) // display status message
                         .font(Font.custom("Didot", size: 40))
                     Text((isRunning || time == 0) ? formatTimeRunning(time) : formatTime(time)) // creates string in time (0:00) format, with 2 decimal places (%.2f)
-                        .font(Font.custom("Party LET", size: 107))
+                        .font(Font.custom("Party LET", size: 106))
                         .monospacedDigit() // makes sure spacing is correct between digits whenever it's moving, each number takes the same width (for example with 1 and 9, where 1 is typically thinner than 9)
                         .padding()
                     HStack {
