@@ -58,15 +58,22 @@ struct PaceView: View {
                     }
                 HStack(spacing: 12) { // user can toggle distance units from km to mi (and vice versa)
                     Text("units:")
-                        .font(.subheadline)
+                        .font((Font.custom("Didot", size: 20))).bold()
                     Text("km")
-                        .font(.subheadline)
+                        .font((Font.custom("Didot", size: 20)))
                         .fontWeight(inMiles ? .regular : .bold)
                         .foregroundColor(inMiles ? .secondary : .primary) // sets km to bold if in km
                     Toggle("", isOn: $inMiles) // toggle switch to switch between km and mi
                         .frame(width: 60)
+                        .onChange(of: inMiles) {
+                            pace = ""
+                            speed = ""
+                            convPace = ""
+                            convSpeed = ""
+                            calculated = false
+                        }
                     Text("mi")
-                        .font(.subheadline)
+                        .font((Font.custom("Didot", size: 20)))
                         .fontWeight(inMiles ? .bold : .regular)
                         .foregroundColor(inMiles ? .primary : .secondary) // sets mi to bold if in mi
                 }
