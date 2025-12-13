@@ -79,7 +79,7 @@ struct StopwatchView: View {
             statusMessage = "Off to a great start!" // status message changed to motivational message
         }
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) // makes it repeat in milliseconds
-        { _ in // closure: block of code that runs later; _ is a parameter but doesn;t use it (ignores the input)
+        { _ in // closure: block of code that runs later; _ is a parameter but doesn't use it (ignores the input)
             time += 0.01
             checkMilestones()
         }
