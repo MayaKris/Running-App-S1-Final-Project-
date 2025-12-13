@@ -18,7 +18,7 @@ struct StopwatchView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.blue.opacity(0.2).ignoresSafeArea() // changed background color to light blue
+                Color.blue.opacity(0.15).ignoresSafeArea() // changed background color to light blue
                 VStack {
                     Text("⏱️") // added clock icon above title
                         .font(Font.custom("Party LET", size: 115))
