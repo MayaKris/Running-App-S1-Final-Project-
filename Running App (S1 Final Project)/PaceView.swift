@@ -62,13 +62,13 @@ struct PaceView: View {
                     Text("km")
                         .font(.subheadline)
                         .fontWeight(inMiles ? .regular : .bold)
-                        .foregroundColor(inMiles ? .secondary : .primary)
-                    Toggle("", isOn: $inMiles)
+                        .foregroundColor(inMiles ? .secondary : .primary) // sets km to bold if in km
+                    Toggle("", isOn: $inMiles) // toggle switch to switch between km and mi
                         .frame(width: 60)
                     Text("mi")
                         .font(.subheadline)
                         .fontWeight(inMiles ? .bold : .regular)
-                        .foregroundColor(inMiles ? .primary : .secondary)
+                        .foregroundColor(inMiles ? .primary : .secondary) // sets mi to bold if in mi
                 }
                 .padding()
                 Button("Calculate Pace") {
@@ -118,7 +118,7 @@ struct PaceView: View {
         let secondsPerUnit = totalSeconds / dist
         let paceMin = Int(secondsPerUnit) / 60
         let paceSec = Int(secondsPerUnit) % 60
-        let paceString = String(format: "%d:%02d", paceMin, paceSec) // %02d: always show two digits
+        let paceString = String(format: "%d:%02d", paceMin, paceSec) // %02d: to show two digits
         let newPace = paceString
         let newSpeedCalc = dist / (totalSeconds / 3600.0)
         let newSpeed = String(format: "%.2f", newSpeedCalc)
@@ -151,20 +151,20 @@ struct PaceView: View {
         let totalSeconds = mins * 60 + secs
         let hours = totalSeconds / 3600
         if inMiles {
-            let km = dist * 1.60934
+            let km = dist * 1.60934 // calculate km from m
             let secPerKm = totalSeconds / km
             let min = Int(secPerKm) / 60 
             let sec = Int(secPerKm) % 60
-            convPace = "\(String(format: "%d:%02d", min, sec))  min/km"
+            convPace = "\(String(format: "%d:%02d", min, sec))  min/km" // display converted results
             let kmh = km / hours
             convSpeed = "\(String(format: "%.2f", kmh)) km/h"
         }
         else {
-            let miles = dist * 0.621371
+            let miles = dist * 0.621371 // calculate m from km
             let secPerMile = totalSeconds / miles
             let min = Int(secPerMile) / 60
             let sec = Int(secPerMile) % 60
-            convPace = "\(String(format: "%d:%02d", min, sec))  min/mi"
+            convPace = "\(String(format: "%d:%02d", min, sec))  min/mi" // display converted results
             let mph = miles / hours
             convSpeed = "\(String(format: "%.2f", mph)) mph"
         }
