@@ -58,6 +58,8 @@ struct StopwatchView: View {
                         }
                     // if the stopwatch has been used after a run, the option to calculate a pace using the recorded time is offered with the button below:
                     if (time > 0 && isRunning == false){
+                        Text("Great run!").bold()
+                            .font(Font.custom("Didot", size: 37))
                         Button("calculate my pace 👟") {
                             goToPace = true
                         }
@@ -106,9 +108,6 @@ struct StopwatchView: View {
     private func stopTimer() {
         isRunning = false
         timer?.invalidate() // stopwatch is stopped
-        if time > 0 {
-            statusMessage = "Great run!" // status message changed to congratulatory message
-        }
     }
     
     private func resetTimer() {
