@@ -16,15 +16,15 @@ struct ContentView: View {
                     Text(" ") // added space above title
                         .font(Font.custom("Party LET", size: 40))
                     Text("welcome")
-                        .font(Font.custom("Party LET", size: 75))
+                        .font(Font.custom("Party LET", size: 85))
                     Text("Runner!")
-                        .font(Font.custom("Party LET", size: 102)) // added titles with custom font and swize
-                    Image("TwoRunners").resizable().frame(width: 300, height: 250) // added image of two runners (potential app icon?)
+                        .font(Font.custom("Party LET", size: 105)) // added titles with custom font and swize
+                    Image("TwoRunners").resizable().frame(width: 312, height: 253) // added image of two runners (potential app icon?)
                     Spacer()
                     NavigationLink("time my run ⏱️", destination: StopwatchView()) // navigation link to go to stopwatch view (time your run)
-                        .font(Font.custom("Didot", size: 40))
+                        .font(Font.custom("Didot", size: 42))
                     NavigationLink("what's my pace? 👟", destination: PaceView())
-                        .font(Font.custom("Didot", size: 40))
+                        .font(Font.custom("Didot", size: 42))
                     Spacer()
                 }
             }
