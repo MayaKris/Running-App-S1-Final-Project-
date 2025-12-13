@@ -55,16 +55,18 @@ struct StopwatchView: View {
                         .background(.blue)
                         .foregroundStyle(.white)
                         .cornerRadius(10)
-                        if time > 0 {
-                            Button("Calculate My Pace") {
-                                goToPace = true
-                            }
-                            .font(Font.custom("Didot", size: 22))
-                            .padding()
                         }
+                    // if the stopwatch has been used after a run, the option to calculate a pace using the recorded time is offered with the button below:
+                    if (time > 0 && isRunning == false){
+                        Button("calculate my pace 👟") {
+                            goToPace = true
+                        }
+                        .font(Font.custom("Didot", size: 37))
+                        .padding()
                     }
                 }
             }
+            // takes you to paceView:
             .navigationDestination(isPresented: $goToPace) {
                 PaceView(
                     presetMins: String(Int(time) / 60),
