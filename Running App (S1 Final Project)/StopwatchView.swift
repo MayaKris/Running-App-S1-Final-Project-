@@ -14,46 +14,62 @@ struct StopwatchView: View {
     @State private var timer: Timer? // optional, can be a real timer when running (active) or nil when no timer exists; controls stopwatch updates
     @State private var statusMessage = "Ready to run?" // status message
     @State private var milestonesReached: Set<Int> = [] // so messages don't repeat every 0.01 seconds by tracking which motivational messages the user has already triggered; starts empty and stores integers via <Int> ; is a data structure (similar to an array, but stores items only once and has no duplicates so good for checking if something has been done before)
+    @State private var goToPace = false
     var body: some View {
-        ZStack {
-            Color.blue.opacity(0.2).ignoresSafeArea() // changed background color to light blue
-            VStack {
-                Text("⏱️") // added clock icon above title
-                    .font(Font.custom("Party LET", size: 115))
-                Text(statusMessage) // display status message
-                    .font(Font.custom("Didot", size: 40))
-                Text((isRunning || time == 0) ? formatTimeRunning(time) : formatTime(time)) // creates string in time (0:00) format, with 2 decimal places (%.2f)
-                    .font(Font.custom("Party LET", size: 107))
-                    .monospacedDigit() // makes sure spacing is correct between digits whenever it's moving, each number takes the same width (for example with 1 and 9, where 1 is typically thinner than 9)
-                    .padding()
-                HStack {
-                    Button(action: {
-                        if isRunning { // checks in stopwatch is running
-                            stopTimer()
+        NavigationStack {
+            ZStack {
+                Color.blue.opacity(0.2).ignoresSafeArea() // changed background color to light blue
+                VStack {
+                    Text("⏱️") // added clock icon above title
+                        .font(Font.custom("Party LET", size: 115))
+                    Text(statusMessage) // display status message
+                        .font(Font.custom("Didot", size: 40))
+                    Text((isRunning || time == 0) ? formatTimeRunning(time) : formatTime(time)) // creates string in time (0:00) format, with 2 decimal places (%.2f)
+                        .font(Font.custom("Party LET", size: 107))
+                        .monospacedDigit() // makes sure spacing is correct between digits whenever it's moving, each number takes the same width (for example with 1 and 9, where 1 is typically thinner than 9)
+                        .padding()
+                    HStack {
+                        Button(action: {
+                            if isRunning { // checks in stopwatch is running
+                                stopTimer()
+                            }
+                            else {
+                                startTimer()
+                            }
+                        })
+                        {
+                            Image(isRunning ? "Pause" : "Play").resizable().frame(width: 50, height: 50) // if the stopwatch is running, it'll display the "pause" image, otherwise if the stopwatch isn't running it'll display the "play" image
                         }
-                        else {
-                            startTimer()
+                        .padding()
+                        .background(isRunning ? .red : .green) // if the stopwatch is running, the background will be red, otherwise if the stopwatch is not running the background will be green (pause button is red, play button is green)
+                        .foregroundStyle(.white)
+                        .cornerRadius(10)
+                        .padding()
+                        Button(action: {
+                            resetTimer()
+                        })
+                        {
+                            Image("Reset").resizable().frame(width: 50, height: 50)
                         }
-                    })
-                    {
-                        Image(isRunning ? "Pause" : "Play").resizable().frame(width: 50, height: 50) // if the stopwatch is running, it'll display the "pause" image, otherwise if the stopwatch isn't running it'll display the "play" image
+                        .padding()
+                        .background(.blue)
+                        .foregroundStyle(.white)
+                        .cornerRadius(10)
+                        if time > 0 {
+                            Button("Calculate My Pace") {
+                                goToPace = true
+                            }
+                            .font(Font.custom("Didot", size: 22))
+                            .padding()
+                        }
                     }
-                    .padding()
-                    .background(isRunning ? .red : .green) // if the stopwatch is running, the background will be red, otherwise if the stopwatch is not running the background will be green (pause button is red, play button is green)
-                    .foregroundStyle(.white)
-                    .cornerRadius(10)
-                    .padding()
-                    Button(action: {
-                        resetTimer()
-                    })
-                    {
-                        Image("Reset").resizable().frame(width: 50, height: 50)
-                    }
-                    .padding()
-                    .background(.blue)
-                    .foregroundStyle(.white)
-                    .cornerRadius(10)
                 }
+            }
+            .navigationDestination(isPresented: $goToPace) {
+                PaceView(
+                    presetMins: String(Int(time) / 60),
+                    presetSecs: String(Int(time) % 60)
+                )
             }
         }
     }

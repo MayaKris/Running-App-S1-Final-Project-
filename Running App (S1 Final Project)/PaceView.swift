@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct PaceView: View {
+    var presetMins: String? = nil
+    var presetSecs: String? = nil // optionally recieve time from another view, otherwise nil
     @State private var minutes = ""
     @State private var seconds = ""
     @State private var distance = ""
@@ -46,6 +48,14 @@ struct PaceView: View {
                         .onTapGesture {
                             calculated = false // set to false when user starts typing new time (seconds)
                         }
+                }
+                .onAppear {
+                    if let presetMins {
+                        minutes = presetMins
+                    }
+                    if let presetSecs {
+                        seconds = presetSecs
+                    }
                 }
                 Text("enter your distance:")
                     .font(Font.custom("Didot", size: 37))
